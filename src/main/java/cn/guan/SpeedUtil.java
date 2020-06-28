@@ -9,6 +9,8 @@ public class SpeedUtil {
 
     private static final String DIVIDEND_MESSAGE = " Dividend cannot be null or zero .";
 
+    private static final String DISTANCE_MESSAGE = " the distance is less than the speed and cannot complete a lap.";
+
     /**
      * Get the time for a person to complete a lap (including intermediate breaks)
      *
@@ -63,11 +65,14 @@ public class SpeedUtil {
      */
     public static BigDecimal getAllTime(BigDecimal distance,
                                         Integer numberOfEncounters, BigDecimal speedDifference) {
-        if (null == numberOfEncounters) {
+        if (null == numberOfEncounters  || 0 == numberOfEncounters) {
             numberOfEncounters = 1;
         }
         if (null == speedDifference || BigDecimal.ZERO.equals(speedDifference))
             throw new IllegalArgumentException(DIVIDEND_MESSAGE);
+        if(distance.compareTo(speedDifference) < 0){
+            throw new IllegalArgumentException(DISTANCE_MESSAGE);
+        }
         BigDecimal encounters = distance.multiply(new BigDecimal(numberOfEncounters));
         return encounters.divide(speedDifference, 2, BigDecimal.ROUND_HALF_DOWN);
     }
